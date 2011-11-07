@@ -1,3 +1,31 @@
-= StupidSearch
+= NaiveSearch
 
-This project rocks and uses MIT-LICENSE.
+Very naive full text search implementation for ActiveRecord. Orders results by relevance. Works like this:
+
+* The contents of all the specified fields are stored in a text field.
+* Every word in a search query is matched against that text field, in SQL using +like+.
+* The returned results are then re-ordered based on how well they match the query and the words the query is made up of.
+
+It Doesn't Scale, much. For situations when more ambitious search solutions are overkill.
+
+== Examples
+
+  class Person < ActiveRecord::Base
+    naive_search_on :name, :surname, :description
+  end
+
+This makes the specified fields searchable like so:
+
+  Person.search_for 'my query'
+
+Optionally, you can specify the order and limit of results to return from the database:
+
+  class Person < ActiveRecord::Base
+    naive_search_on :name, :surname, :description, :order => "id desc", :limit => 20
+  end
+
+Note that the search results will still be re-ordered based on fuzzy "relevance", this simply specifies how many results to retrieve from the database, and in which order.
+
+== License
+
+This project uses MIT-LICENSE.
