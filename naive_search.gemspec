@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = NaiveSearch::VERSION
   s.authors     = ["Tomas Jogin"]
   s.email       = ["tomas@jogin.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of NaiveSearch."
-  s.description = "TODO: Description of NaiveSearch."
+  s.homepage    = "http://github.com/tjogin/naive_search"
+  s.summary     = "Naive full text search ordered by relevance for ActiveRecord"
+  s.description = "Provides very simple full text searching for ActiveRecord, without depending on any particular SQL-feature, search server or anything like that."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
