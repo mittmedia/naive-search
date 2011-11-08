@@ -5,7 +5,7 @@ require "naive_search/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "naive_search"
+  s.name        = "naive-search"
   s.version     = NaiveSearch::VERSION
   s.authors     = ["Tomas Jogin"]
   s.email       = ["tomas@jogin.com"]
