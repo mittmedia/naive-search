@@ -3,14 +3,14 @@ require 'test_helper'
 class NaiveSearchTest < ActiveSupport::TestCase
   setup do
     [
-      { :name => "Arnold", :surname => "Bentley", :description => "tall, skinny, dark, minnie's husband" },
-      { :name => "Minnie", :surname => "Bentley", :description => "short, fat, arnold's wife" },
-      { :name => "Robert", :surname => "Bentley", :description => "short, skinny, arnold's brother" },
-      { :name => "Dennis", :surname => "Donaghue", :description => "ugly, annoying, minne's brother" },
-      { :name => "Stan", :surname => "Donaghue", :description => "tall, handsome, minnie's dad" },
-      { :name => "Tina", :surname => "Donaghue", :description => "tall, sweet, minnie's mom" },
-      { :name => "Dan", :surname => "Bentley", :description => "short, stupid, arnold's dad" },
-      { :name => "Julia", :surname => "Bentley", :description => "short, weird, arnold's mom" }
+      { :name => "Arnold", :surname => "Bentley", :description => "tall, skinny, dark, minnie's husband", :age => 50 },
+      { :name => "Minnie", :surname => "Bentley", :description => "short, fat, arnold's wife", :age => 48 },
+      { :name => "Robert", :surname => "Bentley", :description => "short, skinny, arnold's brother", :age => 46 },
+      { :name => "Dennis", :surname => "Donaghue", :description => "ugly, annoying, minne's brother", :age => 46 },
+      { :name => "Stan", :surname => "Donaghue", :description => "tall, handsome, minnie's dad", :age => 70 },
+      { :name => "Tina", :surname => "Donaghue", :description => "tall, sweet, minnie's mom", :age => 69 },
+      { :name => "Dan", :surname => "Bentley", :description => "short, stupid, arnold's dad", :age => 75 },
+      { :name => "Julia", :surname => "Bentley", :description => "short, weird, arnold's mom", :age => 72 }
      ].each do |attrs|
        Person.create(attrs)
      end
@@ -45,5 +45,16 @@ class NaiveSearchTest < ActiveSupport::TestCase
 
     relevance_nice_breakfast = Hotel.order("id asc").map{|h| h.relevance_for "nice breakfast" }
     assert_equal [1, 1, 2, 4], relevance_nice_breakfast, "should calculate correct relevance for 'nice breakfast'"
+  end
+  
+  test "updating" do
+    new_person = Person.create(:name => "Abraham", :surname => "Lincoln", :description => "nice hat!", :age => 56)
+    assert_equal "Abraham\nLincoln\nnice hat!", new_person.naive_search_index, "should store value of the indexed fields in the search index"
+  
+    new_person.age = 57
+    new_person.send :update_naive_search_index
+
+    assert_equal ["age"], new_person.changed, "should not change the search index #1"
+    assert_equal "Abraham\nLincoln\nnice hat!", new_person.naive_search_index, "should not change the search index #2"
   end
 end

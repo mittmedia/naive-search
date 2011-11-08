@@ -18,7 +18,7 @@ module NaiveSearch
         cattr_accessor :naive_search_index_field
         self.naive_search_fields = fields
         self.naive_search_index_field = options[:naive_search_index_field] || :naive_search_index
-        self.before_save :add_fields_to_naive_search
+        self.before_save :update_naive_search_index
       end
 
       def search_for(query)
@@ -49,7 +49,7 @@ module NaiveSearch
     end
     
     private
-    def add_fields_to_naive_search
+    def update_naive_search_index
       full_text = self.naive_search_fields.map do |field|
         self.send(field)
       end.join "\n"
