@@ -1,7 +1,7 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem's version:
-require "naive_search/version"
+require "naive-search/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = NaiveSearch::VERSION
   s.authors     = ["Tomas Jogin"]
   s.email       = ["tomas@jogin.com"]
-  s.homepage    = "http://github.com/tjogin/naive_search"
+  s.homepage    = "http://github.com/tjogin/naive-search"
   s.summary     = "Naive full text search ordered by relevance for ActiveRecord"
   s.description = "Provides very simple full text searching for ActiveRecord, without depending on any particular SQL-feature, search server or anything like that."
 
