@@ -3,7 +3,6 @@ module NaiveSearch
     extend ActiveSupport::Concern
     
     included do
-      before_save :add_fields_to_naive_search
     end
     
     module ClassMethods
@@ -19,6 +18,7 @@ module NaiveSearch
         cattr_accessor :naive_search_index_field
         self.naive_search_fields = fields
         self.naive_search_index_field = options[:naive_search_index_field] || :naive_search_index
+        self.before_save :add_fields_to_naive_search
       end
 
       def search_for(query)
@@ -38,10 +38,11 @@ module NaiveSearch
 
       words = query.split " "
       score = self.naive_search_fields.map do |field|
-        words.map{|w| self.send(field).downcase.scan(w.downcase).size}.sum +
-        words.map{|w| self.send(field).downcase.scan(query.downcase).size}.sum +
-        words.map{|w| self.send(field).downcase == w.downcase ? 1 : 0 }.sum +
-        words.map{|w| self.send(field).downcase == query.downcase ? 1 : 0 }.sum
+        partial_word_matches  = words.map{|w| self.send(field).to_s.downcase.scan(w.downcase).size}.sum
+        partial_query_matches = words.map{|w| self.send(field).to_s.downcase.scan(query.downcase).size}.sum
+        exact_word_matches    = words.map{|w| self.send(field).to_s.downcase == w.downcase ? 2 : 0 }.sum
+        exact_query_matches   = words.map{|w| self.send(field).to_s.downcase == query.downcase ? 2 : 0 }.sum
+        partial_word_matches + partial_query_matches + exact_word_matches  + exact_query_matches
       end.sum
 
       @naive_relevance[query] = score
