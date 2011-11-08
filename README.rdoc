@@ -8,7 +8,17 @@ Very naive full text search implementation for ActiveRecord. Orders results by r
 
 It Doesn't Scale, much. For situations when more ambitious search solutions are overkill.
 
-== Examples
+== Installation
+
+  gem install naive-search
+
+== Usage
+
+Run the migration generator on your model, like so:
+
+  rails generate naive_search:migration Person
+
+Run it. Then use as follows:
 
   class Person < ActiveRecord::Base
     naive_search_on :name, :surname, :description
