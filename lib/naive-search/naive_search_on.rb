@@ -21,12 +21,16 @@ module NaiveSearch
         self.before_save :update_naive_search_index
       end
 
-      def search_for(query)
+      def search_for(query, page_no = 1, page_size = nil)
         words = query.split " "
         conditions = words.map do |w|
           replace_bind_variables("#{self.naive_search_index_field} like ?", ["%#{w}%"])
         end.join " OR "
-        self.where(conditions).order(@order).limit(@limit).sort do |a,b|
+        
+        page_size ||= @limit
+        offset = (page_no * page_size) - page_size
+                
+        self.where(conditions).order(@order).limit(page_size).offset(offset).sort do |a,b|
           b.relevance_for(query) <=> a.relevance_for(query)
         end
       end

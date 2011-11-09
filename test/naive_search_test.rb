@@ -57,4 +57,12 @@ class NaiveSearchTest < ActiveSupport::TestCase
     assert_equal ["age"], new_person.changed, "should not change the search index #1"
     assert_equal "Abraham\nLincoln\nnice hat!", new_person.naive_search_index, "should not change the search index #2"
   end
+  
+  test "pagination" do
+    page_one = Person.search_for("arnold bentley", 1, 2).map(&:name)
+    page_two = Person.search_for("arnold bentley", 2, 2).map(&:name)
+    
+    assert_equal ["Julia", "Dan"], page_one
+    assert_equal ["Robert", "Minnie"], page_two
+  end
 end

@@ -34,8 +34,7 @@ Optionally, you can specify the order and limit of results to return from the da
     naive_search_on :name, :surname, :description, :order => "id desc", :limit => 20
   end
 
-Note that the search results will still be re-ordered based on fuzzy "relevance", this simply specifies how many results to retrieve from the database, and in which order.
-
+Note that the search results will still be re-ordered based on fuzzy "relevance", this simply specifies how many results to retrieve from the database, and in which order. Also note that small limits combined with broad searches yields terrible results.
 == License
 
 This project uses MIT-LICENSE.
