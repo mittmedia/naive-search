@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    naive-search (0.1.3)
+    naive-search (0.1.4)
       rails (~> 3.1.1)
 
 GEM

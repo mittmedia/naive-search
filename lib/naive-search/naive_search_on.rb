@@ -37,16 +37,24 @@ module NaiveSearch
     end
     
     def relevance_for(query)
+      query = query.downcase
       @naive_relevance ||= {}
       return @naive_relevance[query] if @naive_relevance[query]
-
       words = query.split " "
+      
       score = self.naive_search_fields.map do |field|
-        partial_word_matches  = words.map{|w| self.send(field).to_s.downcase.scan(w.downcase).size}.sum
-        partial_query_matches = words.map{|w| self.send(field).to_s.downcase.scan(query.downcase).size}.sum
-        exact_word_matches    = words.map{|w| self.send(field).to_s.downcase == w.downcase ? 2 : 0 }.sum
-        exact_query_matches   = words.map{|w| self.send(field).to_s.downcase == query.downcase ? 2 : 0 }.sum
-        partial_word_matches + partial_query_matches + exact_word_matches  + exact_query_matches
+        content = self.send(field).to_s.downcase
+        words.map do |w|
+          w = w.downcase
+          # one point per partial word matches
+          (content.scan(w).size + 
+          # one point per partial query matches
+           content.scan(query).size + 
+          # two points for exact word match
+           (content == w ? 2 : 0) + 
+          # two points for exact query match
+           (content == query ? 2 : 0))
+        end.sum
       end.sum
 
       @naive_relevance[query] = score
