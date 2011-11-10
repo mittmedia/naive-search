@@ -22,7 +22,7 @@ module NaiveSearch
       end
 
       def search_for(query, page_no = 1, page_size = nil)
-        words = query.split " "
+        words = query.to_s.split " "
         conditions = words.map do |w|
           replace_bind_variables("#{self.naive_search_index_field} like ?", ["%#{w}%"])
         end.join " OR "
@@ -37,7 +37,7 @@ module NaiveSearch
     end
     
     def relevance_for(query)
-      query = query.downcase
+      query = query.to_s.downcase
       @naive_relevance ||= {}
       return @naive_relevance[query] if @naive_relevance[query]
       words = query.split " "
@@ -45,10 +45,9 @@ module NaiveSearch
       score = self.naive_search_fields.map do |field|
         content = self.send(field).to_s.downcase
         words.map do |w|
-          w = w.downcase
-          # one point per partial word matches
+          # one point for partial word matches
           (content.scan(w).size + 
-          # one point per partial query matches
+          # one point for partial query matches
            content.scan(query).size + 
           # two points for exact word match
            (content == w ? 2 : 0) + 

@@ -45,6 +45,10 @@ class NaiveSearchTest < ActiveSupport::TestCase
 
     relevance_nice_breakfast = Hotel.order("id asc").map{|h| h.relevance_for "nice breakfast" }
     assert_equal [1, 1, 2, 4], relevance_nice_breakfast, "should calculate correct relevance for 'nice breakfast'"
+    
+    donald = Person.create(:name => "Donald", :surname => "Trump", :description => "rich, comb over")
+    assert_equal 0, donald.relevance_for("")
+    assert_equal 0, donald.relevance_for(100)
   end
   
   test "updating" do
