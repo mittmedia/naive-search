@@ -1,3 +1,5 @@
+require 'unicode_utils/downcase'
+
 module NaiveSearch
   module NaiveSearchOn
     extend ActiveSupport::Concern
@@ -19,7 +21,7 @@ module NaiveSearch
       end
 
       def search_for(query, page_no = 1, page_size = nil)
-        words = UnicodeUtils.downcase(query.to_s).split " "
+        words = ::UnicodeUtils.downcase(query.to_s).split " "
         conditions = words.map do |w|
           replace_bind_variables("#{self.naive_search_index_field} like ?", ["%#{w}%"])
         end.join " OR "
@@ -34,7 +36,7 @@ module NaiveSearch
     end
     
     def relevance_for(query)
-      query = UnicodeUtils.downcase query.to_s
+      query = ::UnicodeUtils.downcase query.to_s
       @naive_relevance ||= {}
       return @naive_relevance[query] if @naive_relevance[query]
       words = query.split " "
@@ -59,7 +61,7 @@ module NaiveSearch
     private
     def update_naive_search_index
       full_text = self.naive_search_fields.map do |field|
-        UnicodeUtils.downcase self.send(field).to_s
+        ::UnicodeUtils.downcase self.send(field).to_s
       end.join "\n"
       self.send "#{self.naive_search_index_field}=", full_text
     end
