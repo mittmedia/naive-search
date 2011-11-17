@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
 require 'test_helper'
 
 class NaiveSearchTest < ActiveSupport::TestCase
@@ -23,6 +26,17 @@ class NaiveSearchTest < ActiveSupport::TestCase
       ].each do |attrs|
         Hotel.create(attrs)
       end
+
+    [
+      { :name => "Örnsköldsvik" },
+      { :name => "Örebro" },
+      { :name => "Östersund" },
+      { :name => "Öresund" },
+      { :name => "Österfärnebo" },
+      { :name => "Malmö" }
+     ].each do |attrs|
+       City.create(attrs)
+     end
   end
   
   test "result order" do
@@ -31,6 +45,13 @@ class NaiveSearchTest < ActiveSupport::TestCase
 
     hotels = Hotel.search_for("cheap clean").map(&:name)
     assert_equal "Holiday Lodge", hotels.first, "should order matches by relevance #2"
+  end
+  
+  test "non-ascii character search" do
+    cities_small_oe = City.search_for("öster sund").map(&:name)
+    cities_capital_oe = City.search_for("Öre sund").map(&:name)
+    assert_equal ["Östersund", "Öresund", "Österfärnebo"], cities_small_oe, "should find matches with small umlaut queries"
+    assert_equal ["Öresund", "Östersund", "Örebro"], cities_capital_oe, "should find matches with capital umlaut queries"
   end
   
   test "relevance" do
@@ -53,13 +74,13 @@ class NaiveSearchTest < ActiveSupport::TestCase
   
   test "updating" do
     new_person = Person.create(:name => "Abraham", :surname => "Lincoln", :description => "nice hat!", :age => 56)
-    assert_equal "Abraham\nLincoln\nnice hat!", new_person.naive_search_index, "should store value of the indexed fields in the search index"
+    assert_equal "abraham\nlincoln\nnice hat!", new_person.naive_search_index, "should store value of the indexed fields in the search index"
   
     new_person.age = 57
     new_person.send :update_naive_search_index
 
     assert_equal ["age"], new_person.changed, "should not change the search index #1"
-    assert_equal "Abraham\nLincoln\nnice hat!", new_person.naive_search_index, "should not change the search index #2"
+    assert_equal "abraham\nlincoln\nnice hat!", new_person.naive_search_index, "should not change the search index #2"
   end
   
   test "pagination" do

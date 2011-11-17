@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 people = [
           { :name => "Arnold", :surname => "Bentley", :description => "tall, skinny, dark, minnie's husband", :age => 48 },
           { :name => "Minnie", :surname => "Bentley", :description => "short, fat, arnold's wife", :age => 46 },
@@ -11,4 +13,14 @@ people = [
 
 people.each do |attrs|
   Person.create(attrs)
+end
+
+
+cities = [
+          { :name => "Örnsköldsvik" },
+          { :name => "Örebro" },
+          { :name => "Malmö" }
+         ]
+cities.each do |attrs|
+  City.create(attrs)
 end

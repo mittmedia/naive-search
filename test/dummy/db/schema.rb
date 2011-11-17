@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111108142454) do
+ActiveRecord::Schema.define(:version => 20111117155928) do
+
+  create_table "cities", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "naive_search_index"
+  end
 
   create_table "hotels", :force => true do |t|
     t.string   "name"
