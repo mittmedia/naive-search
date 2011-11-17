@@ -1,8 +1,9 @@
 PATH
   remote: .
   specs:
-    naive-search (0.1.5)
+    naive-search (0.1.6)
       rails (~> 3.1.1)
+      unicode_utils (~> 1.0.0)
 
 GEM
   remote: http://rubygems.org/
