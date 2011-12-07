@@ -42,7 +42,7 @@ module NaiveSearch
       words = query.split " "
       
       score = self.naive_search_fields.map do |field|
-        content = self.send(field).to_s.downcase
+        content = ::UnicodeUtils.downcase self.send(field).to_s
         words.map do |w|
           # one point for partial word matches
           (content.scan(w).size + 
