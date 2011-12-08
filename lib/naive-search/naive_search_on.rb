@@ -60,10 +60,12 @@ module NaiveSearch
     
     private
     def update_naive_search_index
-      full_text = self.naive_search_fields.map do |field|
-        ::UnicodeUtils.downcase self.send(field).to_s
-      end.join "\n"
-      self.send "#{self.naive_search_index_field}=", full_text
+      if self.respond_to? "#{self.naive_search_index_field}="
+        full_text = self.naive_search_fields.map do |field|
+          ::UnicodeUtils.downcase self.send(field).to_s
+        end.join "\n"
+        self.send "#{self.naive_search_index_field}=", full_text
+      end
     end
     
   end
